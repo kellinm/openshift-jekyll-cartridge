@@ -6,7 +6,7 @@ JEKYLL_PID_FILE=${OPENSHIFT_HOMEDIR}/app-root/runtime/jekyll.pid
 cartridge_type="jekyll"
 
 
-# Check if the wildfly process is running
+# Check if the jekyll process is running
 function isrunning() {
 
     # Check for running app
@@ -27,7 +27,7 @@ function ishttpup() {
             echo "Found ${OPENSHIFT_JEKYLL_IP}:${OPENSHIFT_JEKYLL_HTTP_PORT} listening port"
             return 0
         fi
- 
+
         let count=${count}+1
 
         sleep 2
@@ -49,19 +49,19 @@ function start() {
       dirname $(scl enable ruby193 "which ruby") > $env_dir/OPENSHIFT_RUBY_PATH_ELEMENT
       ld_path=$(LD_LIBRARY_PATH="" scl enable ruby193 "printenv LD_LIBRARY_PATH")
       set_env_var 'OPENSHIFT_RUBY_LD_LIBRARY_PATH_ELEMENT' $ld_path $env_dir
-	  export BUNDLE_GEMFILE=${OPENSHIFT_REPO_DIR}Gemfile
+          export BUNDLE_GEMFILE=${OPENSHIFT_REPO_DIR}Gemfile
 
-	  cd $OPENSHIFT_REPO_DIR
-	  echo "Executing bundle install"
-	  bundle install
-	  echo "Starting Jekyll server"
-	  bundle exec "jekyll serve --port ${OPENSHIFT_JEKYLL_HTTP_PORT} --host ${OPENSHIFT_JEKYLL_IP}" > ${OPENSHIFT_JEKYLL_DIR}/logs/server.log 2>&1 &
+          cd $OPENSHIFT_REPO_DIR
+          echo "Executing bundle install"
+          bundle install
+          echo "Starting Jekyll server"
+          bundle exec "jekyll serve --port ${OPENSHIFT_JEKYLL_HTTP_PORT} --host ${OPENSHIFT_JEKYLL_IP}" > ${OPENSHIFT_JEKYLL_DIR}/logs/server.log 2>&1 &
 
       if ! ishttpup; then
           echo "Timed out waiting for http listening port"
           exit 1
       fi
-	  exit 0
+          exit 0
   fi
 }
 
